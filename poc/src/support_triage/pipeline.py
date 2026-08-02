@@ -47,7 +47,7 @@ class TriagePipeline:
         # --- горячий путь ---
         redaction = pii.redact(ticket.text)
         classification = self._classifier.predict(redaction.text)
-        risk = policy.assess_risk(redaction.text, classification)
+        risk = policy.assess_risk(redaction.text, classification, redaction.found)
         retrieved = self._retriever.search(redaction.text, top_k=2)
         top_score = retrieved[0].score if retrieved else 0.0
 

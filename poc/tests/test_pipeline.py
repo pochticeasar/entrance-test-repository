@@ -99,16 +99,38 @@ def test_generator_never_receives_raw_pii():
     pipeline = TriagePipeline.build(generator=spy)
     raw = (
         "Не приходит письмо для сброса пароля на ivanov@example.com, "
-        "телефон +7 916 123-45-67, карта 4111 1111 1111 1111"
+        "телефон для связи +7 916 123-45-67"
     )
 
     pipeline.run(Ticket(id="t-pii", channel="email", text=raw))
 
     assert spy.seen, "генератор не был вызван — тест ничего не проверил"
     sent = spy.seen[0].text
-    for secret in ("ivanov@example.com", "916 123-45-67", "4111 1111 1111 1111"):
+    for secret in ("ivanov@example.com", "916 123-45-67"):
         assert secret not in sent, f"PII утёк в генератор: {secret}"
-    assert "[EMAIL]" in sent and "[PHONE]" in sent and "[CARD]" in sent
+    assert "[EMAIL]" in sent and "[PHONE]" in sent
+
+
+def test_card_bearing_ticket_never_reaches_generator():
+    """Более сильная гарантия, чем маскирование: карта не доходит до LLM вообще.
+
+    Тикет с платёжными реквизитами эскалируется до шага генерации, поэтому
+    наружу не уходит даже замаскированный вариант.
+    """
+    spy = SpyGenerator()
+    pipeline = TriagePipeline.build(generator=spy)
+
+    result = pipeline.run(
+        Ticket(
+            id="t-card",
+            channel="chat",
+            text="Где посмотреть историю заказов? Моя карта 4111 1111 1111 1111",
+        )
+    )
+
+    assert result.decision is Decision.ESCALATE
+    assert "sensitive_pii:card_number" in result.risk.triggered_rules
+    assert spy.seen == [], "тикет с картой дошёл до генератора"
 
 
 def test_hot_path_fits_latency_budget(pipeline):

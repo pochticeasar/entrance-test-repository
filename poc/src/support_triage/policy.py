@@ -30,6 +30,14 @@ MIN_CONFIDENCE_FOR_SUGGEST = 0.35
 # Темы, по которым автоответ запрещён всегда — деньги и персональные данные.
 ALWAYS_HUMAN_TOPICS = {"payment_failed", "refund_request", "account_deletion"}
 
+# Типы PII, само наличие которых делает тикет «человеческим», независимо от темы.
+# Логика не в приватности (текст всё равно замаскирован), а в том, что раскрытие
+# платёжных реквизитов в переписке — это почти всегда платёжный контекст плюс
+# инцидент безопасности, о котором пользователю нужно сказать отдельно.
+# Контактные данные (email, телефон) сюда НЕ входят: они есть почти в каждом
+# обращении с почтового канала, и запрет по ним убил бы автоматизацию целиком.
+SENSITIVE_PII = {"card_number"}
+
 _RULES: list[tuple[str, re.Pattern[str]]] = [
     (
         "money_dispute",
@@ -62,11 +70,22 @@ _RULES: list[tuple[str, re.Pattern[str]]] = [
 ]
 
 
-def assess_risk(text: str, classification: Classification) -> RiskAssessment:
-    """Правила поверх текста и предсказанной темы. Срабатывание любого = HIGH."""
+def assess_risk(
+    text: str,
+    classification: Classification,
+    pii_found: tuple[str, ...] = (),
+) -> RiskAssessment:
+    """Правила поверх текста, предсказанной темы и найденных PII.
+
+    `pii_found` передаётся отдельным аргументом, потому что к этому моменту
+    текст уже замаскирован: номер карты в нём выглядит как `[CARD]` и текстовым
+    правилом не ловится. Без этого аргумента наличие карты было бы невидимо
+    для политики.
+    """
     triggered = [name for name, pattern in _RULES if pattern.search(text)]
     if classification.topic in ALWAYS_HUMAN_TOPICS:
         triggered.append(f"topic:{classification.topic}")
+    triggered += [f"sensitive_pii:{kind}" for kind in pii_found if kind in SENSITIVE_PII]
     level = Risk.HIGH if triggered else Risk.LOW
     return RiskAssessment(level=level, triggered_rules=tuple(triggered))
 

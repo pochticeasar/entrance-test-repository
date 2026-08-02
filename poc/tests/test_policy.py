@@ -29,6 +29,43 @@ def test_risk_rules_fire(text, expected_rule):
     assert expected_rule in risk.triggered_rules
 
 
+def test_card_number_makes_ticket_human_even_in_safe_topic():
+    """Регрессия: тикет с картой закрывался автоматически.
+
+    Текст к моменту проверки уже замаскирован — карта в нём выглядит как
+    [CARD] и текстовым правилом не ловится. Наличие карты должно приходить
+    в политику отдельным сигналом.
+    """
+    safe_topic = cls("faq_howto", 0.95)
+    risk = assess_risk(
+        "Подскажите, где посмотреть историю заказов? Моя карта [CARD]",
+        safe_topic,
+        pii_found=("card_number",),
+    )
+    assert risk.level is Risk.HIGH
+    assert "sensitive_pii:card_number" in risk.triggered_rules
+
+    decision, _ = decide(safe_topic, risk, 0.9, llm_available=True)
+    assert decision is Decision.ESCALATE
+
+
+def test_contact_pii_does_not_block_automation():
+    """Обратная сторона: email и телефон есть почти в каждом тикете с почты.
+
+    Запрет по ним убил бы автоматизацию целиком — маскирования достаточно.
+    """
+    safe_topic = cls("password_reset", 0.9)
+    risk = assess_risk(
+        "Не приходит письмо для сброса пароля на [EMAIL]",
+        safe_topic,
+        pii_found=("email", "phone"),
+    )
+    assert risk.level is Risk.LOW
+
+    decision, _ = decide(safe_topic, risk, 0.4, llm_available=True)
+    assert decision is Decision.AUTO_REPLY
+
+
 def test_low_risk_for_ordinary_ticket():
     risk = assess_risk("Не приходит письмо для сброса пароля", cls("password_reset", 0.9))
     assert risk.level is Risk.LOW
