@@ -1,0 +1,70 @@
+{"id": "tr-001", "channel": "email", "topic": "password_reset", "text": "Не могу войти в аккаунт, забыл пароль. Как его восстановить?"}
+{"id": "tr-002", "channel": "chat", "topic": "password_reset", "text": "Письмо для сброса пароля не приходит на почту уже полчаса"}
+{"id": "tr-003", "channel": "web_form", "topic": "password_reset", "text": "Здравствуйте! Прошу сбросить пароль от моей учётной записи."}
+{"id": "tr-004", "channel": "mobile", "topic": "password_reset", "text": "забыла пароль, ссылка восстановления не работает"}
+{"id": "tr-005", "channel": "chat", "topic": "password_reset", "text": "Ввожу правильный пароль, пишет неверный логин или пароль. Что делать?"}
+{"id": "tr-006", "channel": "email", "topic": "password_reset", "text": "Как сменить пароль в личном кабинете? Не нашёл настройку."}
+{"id": "tr-007", "channel": "web_form", "topic": "password_reset", "text": "Ссылка для восстановления пароля просрочена, пришлите новую"}
+{"id": "tr-008", "channel": "mobile", "topic": "password_reset", "text": "не приходит смс с кодом для входа в аккаунт"}
+{"id": "tr-009", "channel": "chat", "topic": "password_reset", "text": "Аккаунт заблокирован после нескольких попыток ввода пароля, разблокируйте"}
+{"id": "tr-010", "channel": "email", "topic": "password_reset", "text": "Добрый день. Не приходит письмо со сбросом пароля, проверил спам — пусто."}
+{"id": "tr-011", "channel": "chat", "topic": "delivery_status", "text": "Где мой заказ? Обещали доставку вчера, до сих пор ничего"}
+{"id": "tr-012", "channel": "mobile", "topic": "delivery_status", "text": "трек-номер не отслеживается, где посылка"}
+{"id": "tr-013", "channel": "email", "topic": "delivery_status", "text": "Подскажите статус доставки заказа, оформлял на прошлой неделе"}
+{"id": "tr-014", "channel": "web_form", "topic": "delivery_status", "text": "Когда приедет курьер? Хочу уточнить время доставки."}
+{"id": "tr-015", "channel": "chat", "topic": "delivery_status", "text": "Заказ висит в статусе в пути уже пять дней, это нормально?"}
+{"id": "tr-016", "channel": "mobile", "topic": "delivery_status", "text": "можно изменить адрес доставки заказа?"}
+{"id": "tr-017", "channel": "email", "topic": "delivery_status", "text": "Курьер не приехал в назначенное время, перенесите доставку"}
+{"id": "tr-018", "channel": "chat", "topic": "delivery_status", "text": "Сколько идёт доставка в мой город?"}
+{"id": "tr-019", "channel": "web_form", "topic": "delivery_status", "text": "Статус заказа не обновляется в приложении, посылка где-то потерялась"}
+{"id": "tr-020", "channel": "mobile", "topic": "delivery_status", "text": "хочу забрать заказ в пункте выдачи вместо курьера, как поменять"}
+{"id": "tr-021", "channel": "web_form", "topic": "faq_howto", "text": "Как изменить адрес электронной почты в профиле?"}
+{"id": "tr-022", "channel": "chat", "topic": "faq_howto", "text": "Подскажите, где посмотреть историю моих заказов"}
+{"id": "tr-023", "channel": "email", "topic": "faq_howto", "text": "Как включить двухфакторную аутентификацию в настройках?"}
+{"id": "tr-024", "channel": "mobile", "topic": "faq_howto", "text": "где найти электронный чек по заказу"}
+{"id": "tr-025", "channel": "chat", "topic": "faq_howto", "text": "Как отключить push-уведомления в мобильном приложении?"}
+{"id": "tr-026", "channel": "web_form", "topic": "faq_howto", "text": "Можно ли изменить имя пользователя, которое видят другие?"}
+{"id": "tr-027", "channel": "email", "topic": "faq_howto", "text": "Где скачать мобильное приложение для планшета?"}
+{"id": "tr-028", "channel": "mobile", "topic": "faq_howto", "text": "как поменять язык интерфейса на английский"}
+{"id": "tr-029", "channel": "chat", "topic": "faq_howto", "text": "Подскажите, как привязать второй номер телефона к профилю"}
+{"id": "tr-030", "channel": "web_form", "topic": "faq_howto", "text": "Как посмотреть, какие устройства сейчас в моём аккаунте?"}
+{"id": "tr-031", "channel": "chat", "topic": "payment_failed", "text": "Оплата не проходит, карта отклоняется при попытке оплатить заказ"}
+{"id": "tr-032", "channel": "mobile", "topic": "payment_failed", "text": "деньги списались дважды за один заказ, помогите"}
+{"id": "tr-033", "channel": "email", "topic": "payment_failed", "text": "С карты списали сумму, но заказ не оформился. Где мои деньги?"}
+{"id": "tr-034", "channel": "web_form", "topic": "payment_failed", "text": "При оплате выдаёт ошибку транзакции, пробовал три разные карты"}
+{"id": "tr-035", "channel": "chat", "topic": "payment_failed", "text": "Списание прошло, а подписка не активировалась. Верните деньги."}
+{"id": "tr-036", "channel": "mobile", "topic": "payment_failed", "text": "платёж завис в обработке уже сутки"}
+{"id": "tr-037", "channel": "email", "topic": "payment_failed", "text": "Почему с меня сняли больше, чем указано в счёте? Это ошибка биллинга."}
+{"id": "tr-038", "channel": "chat", "topic": "payment_failed", "text": "Не могу привязать банковскую карту, оплата отклоняется банком"}
+{"id": "tr-039", "channel": "web_form", "topic": "payment_failed", "text": "Двойное списание средств за подписку в этом месяце"}
+{"id": "tr-040", "channel": "mobile", "topic": "payment_failed", "text": "оплатил картой, деньги ушли, статус заказа не оплачен"}
+{"id": "tr-041", "channel": "email", "topic": "refund_request", "text": "Прошу вернуть деньги за отменённый заказ на мою карту"}
+{"id": "tr-042", "channel": "chat", "topic": "refund_request", "text": "Хочу оформить возврат товара, он не подошёл по размеру"}
+{"id": "tr-043", "channel": "web_form", "topic": "refund_request", "text": "Требую полный возврат средств за некачественную услугу"}
+{"id": "tr-044", "channel": "mobile", "topic": "refund_request", "text": "как вернуть деньги за подписку, которой не пользовался"}
+{"id": "tr-045", "channel": "chat", "topic": "refund_request", "text": "Отменил заказ неделю назад, возврат до сих пор не пришёл"}
+{"id": "tr-046", "channel": "email", "topic": "refund_request", "text": "Прошу компенсацию за задержку доставки и возврат стоимости"}
+{"id": "tr-047", "channel": "web_form", "topic": "refund_request", "text": "Товар пришёл повреждённым, оформите возврат денежных средств"}
+{"id": "tr-048", "channel": "mobile", "topic": "refund_request", "text": "верните деньги за отменённую бронь"}
+{"id": "tr-049", "channel": "chat", "topic": "refund_request", "text": "Сколько дней занимает возврат средств на карту после отмены?"}
+{"id": "tr-050", "channel": "email", "topic": "refund_request", "text": "Отказываюсь от услуги, прошу вернуть предоплату в полном объёме"}
+{"id": "tr-051", "channel": "web_form", "topic": "account_deletion", "text": "Прошу удалить мой аккаунт и все персональные данные"}
+{"id": "tr-052", "channel": "email", "topic": "account_deletion", "text": "Хочу полностью удалить профиль из вашего сервиса, это моё право"}
+{"id": "tr-053", "channel": "chat", "topic": "account_deletion", "text": "Удалите мою учётную запись навсегда, я больше не пользуюсь сервисом"}
+{"id": "tr-054", "channel": "mobile", "topic": "account_deletion", "text": "как удалить аккаунт вместе с историей заказов"}
+{"id": "tr-055", "channel": "email", "topic": "account_deletion", "text": "Отзываю согласие на обработку персональных данных, удалите информацию обо мне"}
+{"id": "tr-056", "channel": "web_form", "topic": "account_deletion", "text": "Прошу предоставить копию всех данных, которые вы обо мне храните"}
+{"id": "tr-057", "channel": "chat", "topic": "account_deletion", "text": "Не хочу получать рассылки и хочу стереть профиль целиком"}
+{"id": "tr-058", "channel": "mobile", "topic": "account_deletion", "text": "деактивируйте мой аккаунт пожалуйста"}
+{"id": "tr-059", "channel": "email", "topic": "account_deletion", "text": "Требую удалить мои персональные данные из всех ваших систем"}
+{"id": "tr-060", "channel": "web_form", "topic": "account_deletion", "text": "Как закрыть учётную запись без возможности восстановления?"}
+{"id": "tr-061", "channel": "mobile", "topic": "bug_report", "text": "приложение вылетает при открытии корзины на андроиде"}
+{"id": "tr-062", "channel": "chat", "topic": "bug_report", "text": "Сайт не грузится, белый экран во всех браузерах"}
+{"id": "tr-063", "channel": "web_form", "topic": "bug_report", "text": "Кнопка оформления заказа не нажимается, ничего не происходит"}
+{"id": "tr-064", "channel": "email", "topic": "bug_report", "text": "В личном кабинете отображаются чужие данные, похоже на баг"}
+{"id": "tr-065", "channel": "mobile", "topic": "bug_report", "text": "поиск по каталогу выдаёт ошибку 500"}
+{"id": "tr-066", "channel": "chat", "topic": "bug_report", "text": "Картинки товаров не загружаются со вчерашнего дня"}
+{"id": "tr-067", "channel": "web_form", "topic": "bug_report", "text": "Форма обратной связи не отправляется, висит бесконечная загрузка"}
+{"id": "tr-068", "channel": "mobile", "topic": "bug_report", "text": "после обновления приложение зависает на экране загрузки"}
+{"id": "tr-069", "channel": "email", "topic": "bug_report", "text": "Уведомления приходят с задержкой в несколько часов, это ошибка сервиса"}
+{"id": "tr-070", "channel": "chat", "topic": "bug_report", "text": "Сервис недоступен, ошибка соединения при каждом входе"}
