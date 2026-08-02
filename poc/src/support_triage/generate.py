@@ -18,6 +18,7 @@ import os
 import textwrap
 from typing import Protocol
 
+from . import pii
 from .schema import Draft, RetrievedDoc, Ticket
 
 MODEL_ID = "claude-opus-5"
@@ -76,10 +77,16 @@ class ClaudeGenerator:
         self._model = model
 
     def draft(self, ticket: Ticket, docs: list[RetrievedDoc]) -> Draft:
+        # Защита на границе доверия: маскирование уже выполнено пайплайном, но
+        # этот класс — последняя точка перед выходом данных из периметра, и он
+        # не имеет права полагаться на дисциплину вызывающего кода. redact()
+        # идемпотентен, поэтому повторный вызов на чистом тексте бесплатен.
+        safe_text = pii.redact(ticket.text).text
+
         context = "\n\n".join(f"[{d.id}] {d.title}: {d.text}" for d in docs) or "(пусто)"
         user_content = (
             f"<knowledge_base>\n{context}\n</knowledge_base>\n\n"
-            f"<ticket channel=\"{ticket.channel}\">\n{ticket.text}\n</ticket>"
+            f"<ticket channel=\"{ticket.channel}\">\n{safe_text}\n</ticket>"
         )
         try:
             response = self._client.messages.create(

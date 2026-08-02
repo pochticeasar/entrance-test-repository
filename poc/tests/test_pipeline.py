@@ -20,6 +20,22 @@ class FailingGenerator(Generator):
         raise LLMUnavailable("simulated outage")
 
 
+class SpyGenerator(Generator):
+    """Перехватывает то, что пайплайн реально передаёт в генератор.
+
+    Нужен именно перехват аргумента, а не проверка поля результата: генератор —
+    единственное место, откуда данные уходят во внешний API, и утечка возможна
+    даже при корректном `result.redacted_text`.
+    """
+
+    def __init__(self) -> None:
+        self.seen: list[Ticket] = []
+
+    def draft(self, ticket: Ticket, docs: list[RetrievedDoc]) -> Draft:
+        self.seen.append(ticket)
+        return Draft(text="stub", source="template")
+
+
 @pytest.fixture(scope="module")
 def pipeline():
     return TriagePipeline.build()
@@ -70,6 +86,29 @@ def test_pii_is_redacted_before_anything_else(pipeline):
     )
     assert "a@b.com" not in result.redacted_text
     assert "email" in result.pii_found
+
+
+def test_generator_never_receives_raw_pii():
+    """Инвариант: во внешний LLM API уходит только редактированный текст.
+
+    Регрессия на конкретный класс ошибки — передать в генератор исходный
+    ticket вместо safe_ticket. Проверка поля результата такую подмену не
+    ловит, поэтому смотрим на сам аргумент вызова.
+    """
+    spy = SpyGenerator()
+    pipeline = TriagePipeline.build(generator=spy)
+    raw = (
+        "Не приходит письмо для сброса пароля на ivanov@example.com, "
+        "телефон +7 916 123-45-67, карта 4111 1111 1111 1111"
+    )
+
+    pipeline.run(Ticket(id="t-pii", channel="email", text=raw))
+
+    assert spy.seen, "генератор не был вызван — тест ничего не проверил"
+    sent = spy.seen[0].text
+    for secret in ("ivanov@example.com", "916 123-45-67", "4111 1111 1111 1111"):
+        assert secret not in sent, f"PII утёк в генератор: {secret}"
+    assert "[EMAIL]" in sent and "[PHONE]" in sent and "[CARD]" in sent
 
 
 def test_hot_path_fits_latency_budget(pipeline):
