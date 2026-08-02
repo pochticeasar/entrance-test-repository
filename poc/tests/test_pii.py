@@ -28,3 +28,19 @@ def test_clean_text_is_untouched():
     result = redact(original)
     assert result.text == original
     assert result.found == ()
+
+
+def test_non_card_16_digits_are_not_flagged_as_card():
+    """Номер заказа из 16 цифр не проходит проверку Луна и не эскалирует тикет.
+
+    Без этой проверки любой набор цифр помечался картой: и ложные
+    срабатывания на номерах заказов, и способ обойти очередь к оператору.
+    """
+    result = redact("Номер заказа 1234 5678 9012 3456, подскажите статус")
+    assert "card_number" not in result.found
+
+
+def test_luhn_valid_card_is_still_masked():
+    result = redact("Карта 4111 1111 1111 1111")
+    assert "card_number" in result.found
+    assert "[CARD]" in result.text

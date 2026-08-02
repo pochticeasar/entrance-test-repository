@@ -55,7 +55,11 @@ class TriagePipeline:
             isinstance(self._generator, CircuitBreaker) and self._generator.is_open
         )
         decision, reason = policy.decide(
-            classification, risk, top_score, llm_available=llm_available
+            classification,
+            risk,
+            top_score,
+            llm_available=llm_available,
+            language_ok=policy.language_supported(redaction.text),
         )
         hot_path_ms = (time.perf_counter() - started) * 1000
 

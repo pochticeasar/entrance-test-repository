@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import sys
+from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -27,6 +28,10 @@ from support_triage.schema import Decision, Draft, RetrievedDoc  # noqa: E402
 DATA_DIR = ROOT / "data"
 LOG_PATH = ROOT / "logs" / "decisions.jsonl"
 HOT_PATH_BUDGET_MS = 500
+
+# Демо-набор намеренно перекошен в сторону рискованных кейсов, поэтому порог
+# высокий. В проде это продуктовая величина из product.md, а не константа.
+MAX_ESCALATION_RATE = 0.70
 
 
 class AlwaysFailingGenerator(Generator):
@@ -145,8 +150,31 @@ def main() -> int:
     )
 
     lines = LOG_PATH.read_text(encoding="utf-8").strip().splitlines()
+    records = [json.loads(line) for line in lines]
+
     print(f"\n{'=' * 78}")
-    print(f"Аудит-лог: {len(lines)} решений записано в {LOG_PATH.relative_to(ROOT)}")
+    print("РАСПРЕДЕЛЕНИЕ РЕШЕНИЙ")
+    print("=" * 78)
+    counts = Counter(r["decision"] for r in records)
+    total = len(records)
+    for decision in ("auto_reply", "suggest", "escalate"):
+        n = counts.get(decision, 0)
+        share = n / total
+        bar = "█" * round(share * 40)
+        print(f"  {decision:<11} {n:>3} ({share:>5.0%}) {bar}")
+
+    # Все guardrails давят в сторону человека, поэтому нужна метрика и в
+    # обратную сторону: система, эскалирующая почти всё, формально безопасна
+    # и при этом бесполезна. Без этого «слишком осторожно» нечем заметить.
+    escalation_rate = counts.get("escalate", 0) / total
+    print(f"\n  Доля эскалаций: {escalation_rate:.0%} (порог избыточности {MAX_ESCALATION_RATE:.0%})")
+    if escalation_rate > MAX_ESCALATION_RATE:
+        print("  ⚠️  Система эскалирует больше, чем задумано: guardrails безопасны,")
+        print("      но ценности не создают. Требуется разбор порогов и safe-list.")
+    else:
+        print("  ✅ В пределах ожидаемого.")
+
+    print(f"\nАудит-лог: {total} решений записано в {LOG_PATH.relative_to(ROOT)}")
     print("=" * 78)
     return 0
 

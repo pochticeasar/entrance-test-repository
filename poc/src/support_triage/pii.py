@@ -27,12 +27,46 @@ _PLACEHOLDER = {
 }
 
 
+def _luhn_valid(digits: str) -> bool:
+    """Контрольная сумма Луна — стандартная проверка номера карты.
+
+    Нужна по двум причинам сразу. Во-первых, 16-значные номера заказов и
+    трек-номера иначе маскируются как карты и эскалируют тикет впустую.
+    Во-вторых, без неё любой набор из 16 цифр гарантирует попадание к
+    оператору — то есть правило превращается в способ обойти очередь.
+    Полностью обход это не закрывает (валидный номер можно сгенерировать),
+    но поднимает планку с «набрать что попало» до осознанного действия.
+    """
+    total = 0
+    for i, ch in enumerate(reversed(digits)):
+        d = int(ch)
+        if i % 2 == 1:
+            d *= 2
+            if d > 9:
+                d -= 9
+        total += d
+    return total % 10 == 0
+
+
 def redact(text: str) -> Redaction:
     """Заменяет найденные PII на плейсхолдеры и возвращает список типов."""
     found: list[str] = []
     redacted = text
+
+    def _card(match: re.Match[str]) -> str:
+        digits = re.sub(r"\D", "", match.group(0))
+        if not _luhn_valid(digits):
+            return match.group(0)  # не карта — оставляем как есть
+        found.append("card_number")
+        return _PLACEHOLDER["card_number"]
+
     for name, pattern in _PATTERNS:
+        if name == "card_number":
+            redacted = pattern.sub(_card, redacted)
+            continue
         redacted, n = pattern.subn(_PLACEHOLDER[name], redacted)
         if n:
             found.append(name)
-    return Redaction(text=redacted, found=tuple(found))
+
+    # Порядок типов не значим, но дубликаты мешают читать аудит-лог.
+    return Redaction(text=redacted, found=tuple(dict.fromkeys(found)))
